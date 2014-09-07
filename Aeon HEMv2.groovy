@@ -43,6 +43,10 @@
  *				- Changed all colors to use same blue-green-orange-red as standard ST temperature guages
  *	2014-06-18: Cost calculations
  *				- Added $/kWh preference
+ *	2014-09-07:	Bug fix & Cleanup
+ *				- Fixed "Unexpected Error" on Refresh tile - (added Refresh Capability)
+ *				- Cleaned up low values - reset to ridiculously high value instead of null
+ *				- Added poll() command/capability (just does a refresh)
  *				
  *
  */
@@ -54,6 +58,8 @@ metadata {
 		capability "Power Meter"
 		capability "Configuration"
 		capability "Sensor"
+        capability "Refresh"
+        capability "Polling"
         
         attribute "energy", "string"
         attribute "power", "string"
@@ -180,7 +186,7 @@ metadata {
 			state "default", label:'reset kWh', action:"reset"
 		}
 		standardTile("refresh", "device.power", inactiveLabel: false, decoration: "flat") {
-			state "default", label:'', action:"refresh", icon:"st.secondary.refresh"
+			state "default", label:'', action:"refresh.refresh", icon:"st.secondary.refresh"
 		}
 		standardTile("configure", "device.power", inactiveLabel: false, decoration: "flat") {
 			state "configure", label:'', action:"configuration.configure", icon:"st.secondary.configure"
@@ -242,7 +248,7 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
     			dispValue = newValue+"\nWatts"
                 sendEvent(name: "powerDisp", value: dispValue as String, unit: "")
                 
-                if ((newValue < state.powerLow) || (state.powerLow == null)) {
+                if (newValue < state.powerLow) {
                 	dispValue = newValue+"\n"+timeString
                 	sendEvent(name: "powerOne", value: dispValue as String, unit: "")
                     state.powerLow = newValue
@@ -264,7 +270,7 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
     			dispValue = String.format("%5.2f", newValue)+"\nVolts"
                 sendEvent(name: "voltsDisp", value: dispValue as String, unit: "")
 
-                if ((newValue < state.voltsLow) || (state.voltsLow == null)) {
+                if (newValue < state.voltsLow) {
                 	dispValue = String.format("%5.2f", newValue)+"\n"+timeString
                 	sendEvent(name: "voltsOne", value: dispValue as String, unit: "")                   
                     state.voltsLow = newValue
@@ -284,7 +290,7 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
     			dispValue = String.format("%5.2f", newValue)+"\nAmps"
                 sendEvent(name: "ampsDisp", value: dispValue as String, unit: "")
                 
-                if ((newValue < state.ampsLow) || (state.ampsLow == null)) {
+                if (newValue < state.ampsLow) {
                 	dispValue = String.format("%5.2f", newValue)+"\n"+timeString
                 	sendEvent(name: "ampsOne", value: dispValue as String, unit: "")
                     state.ampsLow = newValue
@@ -313,18 +319,22 @@ def refresh() {
 		zwave.meterV2.meterGet(scale: 2).format()
 	])
 }
+
+def poll() {
+	refresh()
+}
     
 def reset() {
 	log.debug "${device.name} reset"
 
-    state.energyHigh = null
-    state.energyLow = null
+//    state.energyHigh = null
+//    state.energyLow = null
     state.powerHigh = 0
-    state.powerLow = null
+    state.powerLow = 99999
     state.ampsHigh = 0
-    state.ampsLow = null
+    state.ampsLow = 999
     state.voltsHigh = 0
-    state.voltsLow = null
+    state.voltsLow = 999
     
     def dateString = new Date().format("MM/dd/YY", location.timeZone)
     def timeString = new Date().format("H:mm:ss", location.timeZone)
@@ -372,5 +382,4 @@ def configure() {
 
 	cmd
 }
-
 
