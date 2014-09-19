@@ -150,7 +150,7 @@ metadata {
         valueTile("energyOne", "device.energyOne") {
         	state("default", label: '${currentValue}', foregroundColor: "#000000", backgroundColor:"#ffffff")
         }        
-        valueTile("energyTwo", "device.energyTwo", decoration: "flat") {
+        valueTile("energyTwo", "device.energyTwo") {
         	state("default", label: '${currentValue}', foregroundColor: "#000000", backgroundColor:"#ffffff")
         }
         
@@ -195,14 +195,14 @@ metadata {
     
     // Controls row
     
-		standardTile("reset", "device.energy", inactiveLabel: false, decoration: "flat") {
+		standardTile("reset", "device.energy", inactiveLabel: false) {
 			state "default", label:'reset', action:"reset", icon: "st.Health & Wellness.health7"
 		}
-		standardTile("refresh", "device.power", inactiveLabel: false, decoration: "flat") {
-			state "default", label:'', action:"refresh.refresh", icon:"st.secondary.refresh"
+		standardTile("refresh", "device.power", inactiveLabel: false) {
+			state "default", label:'refresh', action:"refresh.refresh", icon:"st.secondary.refresh-icon"
 		}
-		standardTile("configure", "device.power", inactiveLabel: false, decoration: "flat") {
-			state "configure", label:'', action:"configuration.configure", icon:"st.secondary.configure"
+		standardTile("configure", "device.power", inactiveLabel: false) {
+			state "configure", label:'', action:"configure", icon:"st.secondary.configure"
 		}
 
 // TODO: Add configurable delay button - Cycle through 10s, 30s, 1m, 5m, 60m, off?
@@ -238,7 +238,7 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
     
     def dispValue
     def newValue
-	def timeString = new Date().format("H:mm:ss", location.timeZone)
+	def timeString = new Date().format("h:mm a", location.timeZone)
     
     if (cmd.meterType == 33) {
 		if (cmd.scale == 0) {
@@ -353,8 +353,8 @@ def reset() {
     state.voltsHigh = 0
     state.voltsLow = 999
     
-    def dateString = new Date().format("MM/dd/YY", location.timeZone)
-    def timeString = new Date().format("h:mm", location.timeZone)
+    def dateString = new Date().format("m/d/YY", location.timeZone)
+    def timeString = new Date().format("h:mm a", location.timeZone)
     sendEvent(name: "energyOne", value: "Since\n"+dateString+"\n"+timeString, unit: "")
     sendEvent(name: "powerOne", value: "", unit: "")    
     sendEvent(name: "voltsOne", value: "", unit: "")
@@ -396,4 +396,3 @@ def configure() {
 
 	cmd
 }
-
