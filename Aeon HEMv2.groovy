@@ -52,9 +52,14 @@
  */
 metadata {
 	// Automatically generated. Make future change here.
-	definition (name: "Aeon HEMv2", namespace: "smartthings", author: "Barry A. Burke") {
-    
-		capability "Energy Meter"
+	definition (
+		name: "Aeon HEMv2", 
+		namespace: "smartthings",
+		category: "Green Living",
+		author: "Barry A. Burke"
+	) 
+	{
+    	capability "Energy Meter"
 		capability "Power Meter"
 		capability "Configuration"
 		capability "Sensor"
@@ -108,43 +113,49 @@ metadata {
     
     // Watts row
 
-		valueTile("powerDisp", "device.powerDisp" /*, decoration: "flat" */) {
-			state "default", label:'${currentValue}', 
-            	foregroundColors:[[value: 1, color: "#000000"],[value: 10000, color: "#ffffff"]], foregroundColor: "#000000",
+		valueTile("powerDisp", "device.powerDisp") {
+			state (
+				"default", 
+				label:'${currentValue}', 
+            	foregroundColors:[
+            		[value: 1, color: "#000000"],
+            		[value: 10000, color: "#ffffff"]
+            	], 
+            	foregroundColor: "#000000",
                 backgroundColors:[
-				[value: "0 Watts", 		color: "#153591"],
-				[value: "3000 Watts", 	color: "#1e9cbb"],
-				[value: "6000 Watts", 	color: "#90d2a7"],
-				[value: "9000 Watts", 	color: "#44b621"],
-				[value: "12000 Watts", 	color: "#f1d801"],
-				[value: "15000 Watts", 	color: "#d04e00"], 
-				[value: "18000 Watts", 	color: "#bc2323"]                
-			]
+					[value: "0 Watts", 		color: "#153591"],
+					[value: "3000 Watts", 	color: "#1e9cbb"],
+					[value: "6000 Watts", 	color: "#90d2a7"],
+					[value: "9000 Watts", 	color: "#44b621"],
+					[value: "12000 Watts", 	color: "#f1d801"],
+					[value: "15000 Watts", 	color: "#d04e00"], 
+					[value: "18000 Watts", 	color: "#bc2323"]                
+				]
+			)
 		}
         valueTile("powerOne", "device.powerOne", decoration: "flat") {
-        	state "default", label:'${currentValue}'
+        	state("default", label:'${currentValue}', foregroundColor: "#000000", backgroundColor:"#ffffff")
         }
         valueTile("powerTwo", "device.powerTwo", decoration: "flat") {
-        	state "default", label:'${currentValue}'
+        	state("default", label:'${currentValue}', foregroundColor: "#000000", backgroundColor:"#ffffff")
         }
 
 	// Power row
     
-		valueTile("energyDisp", "device.energyDisp", decoration: "flat") {
-			state "default", label: '${currentValue}'
-
+		valueTile("energyDisp", "device.energyDisp") {
+			state("default", label: '${currentValue}', foregroundColor: "#000000", backgroundColor:"#ffffff")
 		}
-        valueTile("energyOne", "device.energyOne", decoration: "flat") {
-        	state "default", label: '${currentValue}'
+        valueTile("energyOne", "device.energyOne") {
+        	state("default", label: '${currentValue}', foregroundColor: "#000000", backgroundColor:"#ffffff")
         }        
         valueTile("energyTwo", "device.energyTwo", decoration: "flat") {
-        	state "default", label: '${currentValue}'
+        	state("default", label: '${currentValue}', foregroundColor: "#000000", backgroundColor:"#ffffff")
         }
         
     
     // Volts row
     
-        valueTile("voltsDisp", "device.voltsDisp" /*, decoration: "flat"*/) {
+        valueTile("voltsDisp", "device.voltsDisp") {
         	state "default", label: '${currentValue}', backgroundColors:[
             	[value: "115.6 Volts", 	color: "#bc2323"],
                 [value: "117.8 Volts", 	color: "#D04E00"],
@@ -183,7 +194,7 @@ metadata {
     // Controls row
     
 		standardTile("reset", "device.energy", inactiveLabel: false, decoration: "flat") {
-			state "default", label:'reset kWh', action:"reset"
+			state "default", label:'reset', action:"reset", icon: "st.Health & Wellness.health7"
 		}
 		standardTile("refresh", "device.power", inactiveLabel: false, decoration: "flat") {
 			state "default", label:'', action:"refresh.refresh", icon:"st.secondary.refresh"
@@ -195,7 +206,13 @@ metadata {
 // TODO: Add configurable delay button - Cycle through 10s, 30s, 1m, 5m, 60m, off?
 
 		main (["powerDisp","energyDisp","ampsDisp","voltsDisp"])
-		details(["energyOne","energyDisp","energyTwo","powerOne","powerDisp","powerTwo","ampsOne","ampsDisp","ampsTwo","voltsOne","voltsDisp","voltsTwo","reset","refresh", "configure"])
+		details([
+			"energyOne","energyDisp","energyTwo",
+			"powerOne","powerDisp","powerTwo",
+			"ampsOne","ampsDisp","ampsTwo",			// Comment out these two lines for HEMv!
+			"voltsOne","voltsDisp","voltsTwo",		// Comment out these two lines for HEMv1
+			"reset","refresh", "configure"
+		])
 	}
     preferences {
     	input "kWhCost", "string", title: "\$/kWh (0.16)", defaultValue: "0.16" as String
@@ -327,8 +344,6 @@ def poll() {
 def reset() {
 	log.debug "${device.name} reset"
 
-//    state.energyHigh = null
-//    state.energyLow = null
     state.powerHigh = 0
     state.powerLow = 99999
     state.ampsHigh = 0
@@ -337,7 +352,7 @@ def reset() {
     state.voltsLow = 999
     
     def dateString = new Date().format("MM/dd/YY", location.timeZone)
-    def timeString = new Date().format("H:mm:ss", location.timeZone)
+    def timeString = new Date().format("h:mm", location.timeZone)
     sendEvent(name: "energyOne", value: "Since\n"+dateString+"\n"+timeString, unit: "")
     sendEvent(name: "powerOne", value: "", unit: "")    
     sendEvent(name: "voltsOne", value: "", unit: "")
@@ -350,9 +365,6 @@ def reset() {
     sendEvent(name: "powerTwo", value: "", unit: "")    
     sendEvent(name: "voltsTwo", value: "", unit: "")
     sendEvent(name: "ampsTwo", value: "", unit: "")
-    
-//    unschedule( "reset" )								// now scheduled by FixerUpper
-//    schedule("0 1 0 * * ?", "reset" )					// Daily at 11:59pm
     
 // No V1 available
 	def cmd = delayBetween( [
