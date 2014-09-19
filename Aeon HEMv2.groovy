@@ -16,6 +16,7 @@
  *  Aeon Home Energy Meter v2 (US)
  *
  *  Author: Barry A. Burke
+ *  Contributors: Brock Haymond: UI updates
  *
  *  Genesys: Based off of Aeon Smart Meter Code sample provided by SmartThings (2013-05-30). Built on US model
  *			 may also work on international versions (currently reports total values only)
@@ -48,7 +49,8 @@
  *				- Cleaned up low values - reset to ridiculously high value instead of null
  *				- Added poll() command/capability (just does a refresh)
  *				
- *
+ * 	2014-09-19	 GUI Tweaks, HEM v1 alterations (from Brock Haymond)
+ *				- Reworked all tiles for look, color, text formatting, & readability
  */
 metadata {
 	// Automatically generated. Make future change here.
