@@ -49,8 +49,10 @@
  *				- Cleaned up low values - reset to ridiculously high value instead of null
  *				- Added poll() command/capability (just does a refresh)
  *				
- * 	2014-09-19	 GUI Tweaks, HEM v1 alterations (from Brock Haymond)
+ * 	2014-09-19: GUI Tweaks, HEM v1 alterations (from Brock Haymond)
  *				- Reworked all tiles for look, color, text formatting, & readability
+ *	2014-09-20: Added HEMv1 Battery reporting (from Brock Haymond)
+ * 				- 
  */
 metadata {
 	// Automatically generated. Make future change here.
@@ -67,6 +69,7 @@ metadata {
 		capability "Sensor"
         capability "Refresh"
         capability "Polling"
+        capability "Battery"
         
         attribute "energy", "string"
         attribute "power", "string"
@@ -131,7 +134,17 @@ metadata {
 					[value: "9000 Watts", 	color: "#44b621"],
 					[value: "12000 Watts", 	color: "#f1d801"],
 					[value: "15000 Watts", 	color: "#d04e00"], 
-					[value: "18000 Watts", 	color: "#bc2323"]                
+					[value: "18000 Watts", 	color: "#bc2323"]
+					
+				/* For low-wattage homes, use these values
+					[value: "0 Watts", color: "#153591"],
+					[value: "500 Watts", color: "#1e9cbb"],
+					[value: "1000 Watts", color: "#90d2a7"],
+					[value: "1500 Watts", color: "#44b621"],
+					[value: "2000 Watts", color: "#f1d801"],
+					[value: "2500 Watts", color: "#d04e00"],
+					[value: "3000 Watts", color: "#bc2323"]
+				*/
 				]
 			)
 		}
@@ -154,7 +167,6 @@ metadata {
         	state("default", label: '${currentValue}', foregroundColor: "#000000", backgroundColor:"#ffffff")
         }
         
-    
     // Volts row
     
         valueTile("voltsDisp", "device.voltsDisp") {
@@ -175,8 +187,13 @@ metadata {
     
     // Amps row
     
-        valueTile("ampsDisp", "device.ampsDisp" /*, decoration: "flat"*/) {
-        	state "default", label: '${currentValue}' , foregroundColor: "#000000", color: "#000000", backgroundColors:[
+        valueTile("ampsDisp", "device.ampsDisp") {
+        	state (
+        		"default", 
+        		label: '${currentValue}' , 
+        		foregroundColor: "#000000", 
+    			color: "#000000", 
+    			backgroundColors:[
 				[value: "0 Amps", 	color: "#153591"],
 				[value: "25 Amps", 	color: "#1e9cbb"],
 				[value: "50 Amps", 	color: "#90d2a7"],
@@ -184,7 +201,8 @@ metadata {
 				[value: "100 Amps", color: "#f1d801"],
 				[value: "125 Amps", color: "#d04e00"], 
 				[value: "150 Amps", color: "#bc2323"]
-			] 
+			]
+		)
         }
         valueTile("ampsOne", "device.ampsOne", decoration: "flat") {
         	state "default", label:'${currentValue}'
@@ -204,8 +222,12 @@ metadata {
 		standardTile("configure", "device.power", inactiveLabel: false) {
 			state "configure", label:'', action:"configure", icon:"st.secondary.configure"
 		}
+		/* HEMv1 has a battery; v2 is line-powered */
+		 valueTile("battery", "device.battery", decoration: "flat") {
+			state "battery", label:'${currentValue}% battery', unit:""
+		}
 
-// TODO: Add configurable delay button - Cycle through 10s, 30s, 1m, 5m, 60m, off?
+// HEM Version Configuration only needs to be done here - comments to choose what gets displayed
 
 		main (["powerDisp","energyDisp","ampsDisp","voltsDisp"])
 		details([
@@ -213,7 +235,9 @@ metadata {
 			"powerOne","powerDisp","powerTwo",
 			"ampsOne","ampsDisp","ampsTwo",			// Comment out these two lines for HEMv!
 			"voltsOne","voltsDisp","voltsTwo",		// Comment out these two lines for HEMv1
-			"reset","refresh", "configure"
+			"reset","refresh", 
+		//	"battery",					// Include this for HEMv1	
+			"configure"
 		])
 	}
     preferences {
@@ -229,7 +253,7 @@ def parse(String description) {
 	if (cmd) {
 		result = createEvent(zwaveEvent(cmd))
 	}
-	if (result != null) log.debug "Parse returned ${result?.descriptionText}" 
+	if (result != null) { log.debug "Parse returned ${result}" }
 	return result
 }
 
@@ -324,6 +348,22 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
             }
         }
     }           
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.batteryv1.BatteryReport cmd) {
+	def map = [:]
+	map.name = "battery"
+	map.unit = "%"
+	if (cmd.batteryLevel == 0xFF) {
+		map.value = 1
+		map.descriptionText = "${device.displayName} battery is low"
+		map.isStateChange = true
+	} 
+	else {
+		map.value = cmd.batteryLevel
+	}
+	log.debug map
+	return map
 }
 
 def zwaveEvent(physicalgraph.zwave.Command cmd) {
