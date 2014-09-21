@@ -229,11 +229,14 @@ metadata {
 
 // HEM Version Configuration only needs to be done here - comments to choose what gets displayed
 
-		main (["powerDisp","energyDisp","ampsDisp","voltsDisp"])
+		main (["energyDisp","energyTwo",
+			"ampsDisp","voltsDisp",				// Comment out this one for HEMv1
+			"powerDisp"
+			])
 		details([
 			"energyOne","energyDisp","energyTwo",
 			"powerOne","powerDisp","powerTwo",
-			"ampsOne","ampsDisp","ampsTwo",			// Comment out these two lines for HEMv!
+			"ampsOne","ampsDisp","ampsTwo",			// Comment out these two lines for HEMv1
 			"voltsOne","voltsDisp","voltsTwo",		// Comment out these two lines for HEMv1
 			"reset","refresh", 
 		//	"battery",					// Include this for HEMv1	
