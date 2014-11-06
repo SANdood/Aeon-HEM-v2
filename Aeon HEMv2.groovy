@@ -1,5 +1,5 @@
 /**
- *  Aeon HEMv2
+ *  Aeon HEMv2+
  *
  *  Copyright 2014 Barry A. Burke
  *
