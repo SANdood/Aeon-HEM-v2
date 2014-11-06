@@ -73,7 +73,7 @@ metadata {
         
         attribute "energy", "string"
         attribute "power", "string"
-        attribute "voltage", "string"
+        attribute "volts", "string"
         attribute "amps", "string"
         
         attribute "energyDisp", "string"
@@ -427,7 +427,7 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
                     state.voltsHighDisp = dispValue
                 }                
                 state.voltsValue = newValue
-				[name: "voltage", value: newValue, unit: "V"]
+				[name: "volts", value: newValue, unit: "V"]
             }
         }
         else if (cmd.scale==1) {
