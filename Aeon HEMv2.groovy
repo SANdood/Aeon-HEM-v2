@@ -266,10 +266,38 @@ metadata {
 			)
         }
         valueTile("ampsOne", "device.ampsOne", decoration: "flat") {
-        	state "default", label:'${currentValue}'
+        	state(
+        		"default",
+        		label:'${currentValue}',
+        		foregroundColor: "#000000", 
+    			color: "#000000", 
+    			backgroundColors:[
+					[value: "0 Amps", 	color: "#153591"],
+					[value: "25 Amps", 	color: "#1e9cbb"],
+					[value: "50 Amps", 	color: "#90d2a7"],
+					[value: "75 Amps", 	color: "#44b621"],
+					[value: "100 Amps", color: "#f1d801"],
+					[value: "125 Amps", color: "#d04e00"], 
+					[value: "150 Amps", color: "#bc2323"]
+				]
+			)
         }
         valueTile("ampsTwo", "device.ampsTwo", decoration: "flat") {
-        	state "default", label:'${currentValue}'
+        	state(
+        		"default", 
+        		label:'${currentValue}',
+        		foregroundColor: "#000000", 
+    			color: "#000000", 
+    			backgroundColors:[
+					[value: "0 Amps", 	color: "#153591"],
+					[value: "25 Amps", 	color: "#1e9cbb"],
+					[value: "50 Amps", 	color: "#90d2a7"],
+					[value: "75 Amps", 	color: "#44b621"],
+					[value: "100 Amps", color: "#f1d801"],
+					[value: "125 Amps", color: "#d04e00"], 
+					[value: "150 Amps", color: "#bc2323"]
+				]
+			)        		
         }
     
     // Controls row
@@ -474,7 +502,7 @@ def zwaveEvent(physicalgraph.zwave.commands.multichannelv3.MultiChannelCmdEncap 
                 		newValue = encapsulatedCommand.scaledMeterValue
 						formattedValue = String.format("%5.2f", newValue)
 						dispValue = "${formattedValue}\nVolts"
-						[name: "voltsOne", value:dispValue, unit: "", descriptionText: "L1 Voltage Level ${formattedValue} Volts"]
+						[name: "voltsOne", value:dispValue, unit: "", descriptionText: "L1 Voltage ${formattedValue} Volts"]
                 	}               
 				} 
 				else if (cmd.sourceEndPoint == 2) {
@@ -548,9 +576,23 @@ def toggleDisplay() {
 		else { state.display = 1 }
 	}
 	else { state.display = 1 }
-	reset()
+	zeroDisplay
 }
 
+def zeroDisplay() {
+	sendEvent(name: "powerOne", value: "", unit: "")    
+    sendEvent(name: "voltsOne", value: "", unit: "")
+    sendEvent(name: "ampsOne", value: "", unit: "")
+    sendEvent(name: "ampsDisp", value: "", unit: "")
+    sendEvent(name: "voltsDisp", value: "", unit: "")
+    sendEvent(name: "powerDisp", value: "", unit: "")
+    sendEvent(name: "energyOne", value: "", unit: "")
+	sendEvent(name: "energyDisp", value: "", unit: "")
+    sendEvent(name: "energyTwo", value: "Cost\n--", unit: "")
+    sendEvent(name: "powerTwo", value: "", unit: "")    
+    sendEvent(name: "voltsTwo", value: "", unit: "")
+    sendEvent(name: "ampsTwo", value: "", unit: "")
+}
 def reset() {
 	log.debug "${device.name} reset"
 
@@ -563,20 +605,14 @@ def reset() {
     
     if (!state.display) { state.display = 1 }
     
-    def dateString = new Date().format("m/d/YY", location.timeZone)
-    def timeString = new Date().format("h:mm a", location.timeZone)
-    sendEvent(name: "energyOne", value: "Since\n"+dateString+"\n"+timeString, unit: "")
-    sendEvent(name: "powerOne", value: "", unit: "")    
-    sendEvent(name: "voltsOne", value: "", unit: "")
-    sendEvent(name: "ampsOne", value: "", unit: "")
-    sendEvent(name: "ampsDisp", value: "", unit: "")
-    sendEvent(name: "voltsDisp", value: "", unit: "")
-    sendEvent(name: "powerDisp", value: "", unit: "")    
-	sendEvent(name: "energyDisp", value: "", unit: "")
-    sendEvent(name: "energyTwo", value: "Cost\n--", unit: "")
-    sendEvent(name: "powerTwo", value: "", unit: "")    
-    sendEvent(name: "voltsTwo", value: "", unit: "")
-    sendEvent(name: "ampsTwo", value: "", unit: "")
+    zeroDisplay()
+    
+    if (state.display == 1) {
+    	def dateString = new Date().format("m/d/YY", location.timeZone)
+    	def timeString = new Date().format("h:mm a", location.timeZone)
+    	sendEvent(name: "energyOne", value: "Since\n"+dateString+"\n"+timeString, unit: "")
+    }
+
     
 // No V1 available
 	def cmd = delayBetween( [
