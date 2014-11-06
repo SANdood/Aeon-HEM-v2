@@ -27,4 +27,9 @@ After installation, you need to do TWO things:
 2) Push the RESET button - this will reset all the values necessary for the display to be updated properly. If you don't do this, you'll never see data; if you do, you should start seeing updates within 60 seconds.
 
 Android users will likely find that NOTHING works, because of all the colors used in the tiles. Sorry about that.
-2) 
+
+Advanced Usage
+--------------
+If you'd like to have the kWh value and cost reset to zero, simply call the (device).reset() command. I use a modified version of Pollster to do this at midnight every day; others have the device resetting weekly or even monthly.
+
+You can also post the data to xively - I've added my SmartApp that does this for me to this repository for those interested in getting into that. No assistance promised - use AS-IS or modify.
