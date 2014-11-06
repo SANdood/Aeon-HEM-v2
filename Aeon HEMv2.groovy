@@ -265,7 +265,7 @@ metadata {
 				]
 			)
         }
-        valueTile("ampsOne", "device.ampsOne", decoration: "flat") {
+        valueTile("ampsOne", "device.ampsOne") {
         	state(
         		"default",
         		label:'${currentValue}',
@@ -282,7 +282,7 @@ metadata {
 				]
 			)
         }
-        valueTile("ampsTwo", "device.ampsTwo", decoration: "flat") {
+        valueTile("ampsTwo", "device.ampsTwo") {
         	state(
         		"default", 
         		label:'${currentValue}',
