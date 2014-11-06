@@ -370,7 +370,8 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
                 state.energyValue = newValue
                 BigDecimal costDecimal = newValue * ( kWhCost as BigDecimal )
                 def costDisplay = String.format("%5.2f",costDecimal)
-                sendEvent(name: "energyTwo", value: "Cost\n\$${costDisplay}", unit: "")
+                state.costDisp = "Cost\n\$"+costDisplay
+                if (state.display == 1) { sendEvent(name: "energyTwo", value: state.costDisp, unit: "") }
                 [name: "energy", value: newValue, unit: "kWh"]
             }
 		} 
@@ -390,18 +391,16 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
                 sendEvent(name: "powerDisp", value: dispValue as String, unit: "")
                 
                 if (newValue < state.powerLow) {
-                	if (state.display == 1) {
-                		dispValue = newValue+"\n"+timeString
-                	 	sendEvent(name: "powerOne", value: dispValue as String, unit: "")
-                	}
+                	dispValue = newValue+"\n"+timeString
+                	if (state.display == 1) { sendEvent(name: "powerOne", value: dispValue as String, unit: "")	}
                     state.powerLow = newValue
+                    state.powerLowDisp = dispValue
                 }
                 if (newValue > state.powerHigh) {
-                	if (state.display == 1) {
-                		dispValue = newValue+"\n"+timeString
-						sendEvent(name: "powerTwo", value: dispValue as String, unit: "")
-                	}
+                	dispValue = newValue+"\n"+timeString
+                	if (state.display == 1) { sendEvent(name: "powerTwo", value: dispValue as String, unit: "")	}
                     state.powerHigh = newValue
+                    state.powerHighDisp = dispValue
                 }
                 state.powerValue = newValue
                 [name: "power", value: newValue, unit: "W"]
@@ -416,18 +415,16 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
                 sendEvent(name: "voltsDisp", value: dispValue as String, unit: "")
 
                 if (newValue < state.voltsLow) {
-                	if (state.display == 1) {
-                		dispValue = String.format("%5.2f", newValue)+"\n"+timeString
-                		sendEvent(name: "voltsOne", value: dispValue as String, unit: "")
-                	}
+                	dispValue = String.format("%5.2f", newValue)+"\n"+timeString                	
+                	if (state.display == 1) { sendEvent(name: "voltsOne", value: dispValue as String, unit: "")	}
                     state.voltsLow = newValue
+                    state.voltsLowDisp = dispValue
                 }
                 if (newValue > state.voltsHigh) {
-                	if (state.display == 1) {
-                    	dispValue = String.format("%5.2f", newValue)+"\n"+timeString
-                		sendEvent(name: "voltsTwo", value: dispValue as String, unit: "")
-                	}
+                    dispValue = String.format("%5.2f", newValue)+"\n"+timeString
+                	if (state.display == 1) { sendEvent(name: "voltsTwo", value: dispValue as String, unit: "") }
                     state.voltsHigh = newValue
+                    state.voltsHighDisp = dispValue
                 }                
                 state.voltsValue = newValue
 				[name: "voltage", value: newValue, unit: "V"]
@@ -440,18 +437,16 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
                 sendEvent(name: "ampsDisp", value: dispValue as String, unit: "")
                 
                 if (newValue < state.ampsLow) {
-                	if (state.display == 1) {
-                		dispValue = String.format("%5.2f", newValue)+"\n"+timeString
-                		sendEvent(name: "ampsOne", value: dispValue as String, unit: "")
-                	}
+                	dispValue = String.format("%5.2f", newValue)+"\n"+timeString
+                	if (state.display == 1) { sendEvent(name: "ampsOne", value: dispValue as String, unit: "") }
                     state.ampsLow = newValue
+                    state.ampsLowDisp = dispValue
                 }
                 if (newValue > state.ampsHigh) {
-                	if (state.display == 1) {
-                		dispValue = String.format("%5.2f", newValue)+"\n"+timeString
-                		sendEvent(name: "ampsTwo", value: dispValue as String, unit: "")
-                	}
+                	dispValue = String.format("%5.2f", newValue)+"\n"+timeString
+                	if (state.display == 1) { sendEvent(name: "ampsTwo", value: dispValue as String, unit: "") }
                     state.ampsHigh = newValue
+                    state.ampsHighDisp = dispValue
                 }                
                 state.ampsValue = newValue
 				[name: "amps", value: newValue, unit: "A"]
@@ -576,50 +571,67 @@ def toggleDisplay() {
 		else { state.display = 1 }
 	}
 	else { state.display = 1 }
-	zeroDisplay
+	
+	resetDisplay()
 }
 
-def zeroDisplay() {
-	sendEvent(name: "powerOne", value: "", unit: "")    
-    sendEvent(name: "voltsOne", value: "", unit: "")
-    sendEvent(name: "ampsOne", value: "", unit: "")
-    sendEvent(name: "ampsDisp", value: "", unit: "")
-    sendEvent(name: "voltsDisp", value: "", unit: "")
-    sendEvent(name: "powerDisp", value: "", unit: "")
-    sendEvent(name: "energyOne", value: "", unit: "")
-	sendEvent(name: "energyDisp", value: "", unit: "")
-    sendEvent(name: "energyTwo", value: "Cost\n--", unit: "")
-    sendEvent(name: "powerTwo", value: "", unit: "")    
-    sendEvent(name: "voltsTwo", value: "", unit: "")
-    sendEvent(name: "ampsTwo", value: "", unit: "")
+def resetDisplay() {
+	if ( state.display == 1 ) {
+    	sendEvent(name: "voltsOne", value: state.voltsLowDisp, unit: "")
+    	sendEvent(name: "ampsOne", value: state.ampsLowDisp, unit: "")    
+		sendEvent(name: "powerOne", value: state.powerLowDisp, unit: "")     
+    	sendEvent(name: "energyOne", value: state.lastResetTime, unit: "")
+    	sendEvent(name: "voltsTwo", value: state.voltsHighDisp, unit: "")
+    	sendEvent(name: "ampsTwo", value: state.ampsHighDisp, unit: "")
+    	sendEvent(name: "powerTwo", value: state.powerHighDisp, unit: "")
+    	sendEvent(name: "energyTwo", value: state.costDisp, unit: "")    	
+	}
+	else {
+    	sendEvent(name: "voltsOne", value: "", unit: "")
+    	sendEvent(name: "ampsOne", value: "", unit: "")    
+		sendEvent(name: "powerOne", value: "", unit: "")     
+    	sendEvent(name: "energyOne", value: "", unit: "")	
+		sendEvent(name: "voltsTwo", value: "", unit: "")
+    	sendEvent(name: "ampsTwo", value: "", unit: "")
+    	sendEvent(name: "powerTwo", value: "", unit: "")
+    	sendEvent(name: "energyTwo", value: "", unit: "")
+	}
 }
+
 def reset() {
 	log.debug "${device.name} reset"
 
     state.powerHigh = 0
+    state.powerHighDisp = ""
     state.powerLow = 99999
+    state.powerLowDisp = ""
     state.ampsHigh = 0
+    state.ampsHighDisp = ""
     state.ampsLow = 999
+    state.ampsLowDisp = ""
     state.voltsHigh = 0
+    state.voltsHighDisp = ""
     state.voltsLow = 999
+    state.voltsLowDisp = ""
     
     if (!state.display) { state.display = 1 }
-    
-    zeroDisplay()
-    
-    if (state.display == 1) {
-    	def dateString = new Date().format("m/d/YY", location.timeZone)
-    	def timeString = new Date().format("h:mm a", location.timeZone)
-    	sendEvent(name: "energyOne", value: "Since\n"+dateString+"\n"+timeString, unit: "")
-    }
 
-    
+    def dateString = new Date().format("m/d/YY", location.timeZone)
+    def timeString = new Date().format("h:mm a", location.timeZone)    
+	state.lastResetTime = "Since\n"+dateString+"\n"+timeString
+	state.costDisp = "Cost\n--"
+	
+    reset Display()
+    sendEvent(name: "energyDisp", value: "", unit: "")
+    sendEvent(name: "powerDisp", value: "", unit: "")	
+    sendEvent(name: "ampsDisp", value: "", unit: "")
+    sendEvent(name: "voltsDisp", value: "", unit: "")
+
 // No V1 available
 	def cmd = delayBetween( [
 		zwave.meterV2.meterReset().format(),
 		zwave.meterV2.meterGet(scale: 0).format()
 	])
-    
     cmd
 }
 
