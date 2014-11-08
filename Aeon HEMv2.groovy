@@ -493,12 +493,12 @@ def zwaveEvent(physicalgraph.zwave.commands.multichannelv3.MultiChannelCmdEncap 
 						dispValue = "${formattedValue}\nAmps"
 						[name: "ampsOne", value: dispValue, unit: "", descriptionText: "L1 Current Draw ${formattedValue} A"]
                 	} 
-                	else if (encapsulatedCommand.scale == 4 ){
-                		newValue = encapsulatedCommand.scaledMeterValue
-						formattedValue = String.format("%5.2f", newValue)
-						dispValue = "${formattedValue}\nVolts"
-						[name: "voltsOne", value:dispValue, unit: "", descriptionText: "L1 Voltage ${formattedValue} Volts"]
-                	}               
+//                	else if (encapsulatedCommand.scale == 4 ){
+//                		newValue = encapsulatedCommand.scaledMeterValue
+//						formattedValue = String.format("%5.2f", newValue)
+//						dispValue = "${formattedValue}\nVolts"
+//						[name: "voltsOne", value:dispValue, unit: "", descriptionText: "L1 Voltage ${formattedValue} Volts"]
+//                	}               
 				} 
 				else if (cmd.sourceEndPoint == 2) {
 					if (encapsulatedCommand.scale == 2 ){
@@ -519,12 +519,12 @@ def zwaveEvent(physicalgraph.zwave.commands.multichannelv3.MultiChannelCmdEncap 
 						dispValue = "${formattedValue}\nAmps"
 						[name: "ampsTwo", value: dispValue, unit: "", descriptionText: "L2 Current Draw ${formattedValue} A"]
 		    		} 
-		    		else if (encapsulatedCommand.scale == 4 ){
-                		newValue = encapsulatedCommand.scaledMeterValue
-						formattedValue = String.format("%5.2f", newValue)
-						dispValue = "${formattedValue}\nVolts"
-						[name: "voltsTwo", value: dispValue as String, unit: "", descriptionText: "L2 Voltage ${formattedValue} Volts"]
-                	}               			
+//		    		else if (encapsulatedCommand.scale == 4 ){
+//                		newValue = encapsulatedCommand.scaledMeterValue
+//						formattedValue = String.format("%5.2f", newValue)
+//						dispValue = "${formattedValue}\nVolts"
+//						[name: "voltsTwo", value: dispValue as String, unit: "", descriptionText: "L2 Voltage ${formattedValue} Volts"]
+//                	}               			
 				}
 			}
 		}
@@ -587,11 +587,11 @@ def resetDisplay() {
     	sendEvent(name: "energyTwo", value: state.costDisp, unit: "")    	
 	}
 	else {
-    	sendEvent(name: "voltsOne", value: "", unit: "")
+    	sendEvent(name: "voltsOne", value: "L1", unit: "")
     	sendEvent(name: "ampsOne", value: "", unit: "")    
 		sendEvent(name: "powerOne", value: "", unit: "")     
     	sendEvent(name: "energyOne", value: "", unit: "")	
-		sendEvent(name: "voltsTwo", value: "", unit: "")
+		sendEvent(name: "voltsTwo", value: "L2", unit: "")
     	sendEvent(name: "ampsTwo", value: "", unit: "")
     	sendEvent(name: "powerTwo", value: "", unit: "")
     	sendEvent(name: "energyTwo", value: "", unit: "")
@@ -621,7 +621,7 @@ def reset() {
 	state.lastResetTime = "Since\n"+dateString+"\n"+timeString
 	state.costDisp = "Cost\n--"
 	
-    reset Display()
+    resetDisplay()
     sendEvent(name: "energyDisp", value: "", unit: "")
     sendEvent(name: "powerDisp", value: "", unit: "")	
     sendEvent(name: "ampsDisp", value: "", unit: "")
