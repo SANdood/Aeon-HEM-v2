@@ -162,12 +162,12 @@ metadata {
             	foregroundColor: "#000000",
                 backgroundColors:[
 					[value: "0 Watts", 		color: "#153591"],
-					[value: "3000 Watts", 	color: "#1e9cbb"],
-					[value: "6000 Watts", 	color: "#90d2a7"],
-					[value: "9000 Watts", 	color: "#44b621"],
-					[value: "12000 Watts", 	color: "#f1d801"],
-					[value: "15000 Watts", 	color: "#d04e00"], 
-					[value: "18000 Watts", 	color: "#bc2323"]
+					[value: "1500 Watts", 	color: "#1e9cbb"],
+					[value: "3000 Watts", 	color: "#90d2a7"],
+					[value: "4500 Watts", 	color: "#44b621"],
+					[value: "6000 Watts", 	color: "#f1d801"],
+					[value: "7500 Watts", 	color: "#d04e00"], 
+					[value: "9000 Watts", 	color: "#bc2323"]
 					
 				/* For low-wattage homes, use these values
 					[value: "0 Watts", color: "#153591"],
@@ -192,12 +192,12 @@ metadata {
             	foregroundColor: "#000000",
                 backgroundColors:[
 					[value: "0 Watts", 		color: "#153591"],
-					[value: "3000 Watts", 	color: "#1e9cbb"],
-					[value: "6000 Watts", 	color: "#90d2a7"],
-					[value: "9000 Watts", 	color: "#44b621"],
-					[value: "12000 Watts", 	color: "#f1d801"],
-					[value: "15000 Watts", 	color: "#d04e00"], 
-					[value: "18000 Watts", 	color: "#bc2323"]
+					[value: "1500 Watts", 	color: "#1e9cbb"],
+					[value: "3000 Watts", 	color: "#90d2a7"],
+					[value: "4500 Watts", 	color: "#44b621"],
+					[value: "6000 Watts", 	color: "#f1d801"],
+					[value: "7500 Watts", 	color: "#d04e00"], 
+					[value: "9000 Watts", 	color: "#bc2323"]
 					
 				/* For low-wattage homes, use these values
 					[value: "0 Watts", color: "#153591"],
@@ -215,13 +215,25 @@ metadata {
 	// Power row
     
 		valueTile("energyDisp", "device.energyDisp") {
-			state("default", label: '${currentValue}', foregroundColor: "#000000", backgroundColor:"#ffffff")
+			state(
+				"default", 
+				label: '${currentValue}', 
+				foregroundColor: "#000000", 
+				backgroundColor:"#ffffff")
 		}
         valueTile("energyOne", "device.energyOne") {
-        	state("default", label: '${currentValue}', foregroundColor: "#000000", backgroundColor:"#ffffff")
+        	state(
+        		"default", 
+        		label: '${currentValue}', 
+        		foregroundColor: "#000000", 
+        		backgroundColor:"#ffffff")
         }        
         valueTile("energyTwo", "device.energyTwo") {
-        	state("default", label: '${currentValue}', foregroundColor: "#000000", backgroundColor:"#ffffff")
+        	state(
+        		"default", 
+        		label: '${currentValue}', 
+        		foregroundColor: "#000000", 
+        		backgroundColor:"#ffffff")
         }
         
     // Volts row
@@ -239,11 +251,31 @@ metadata {
             	]
             )
         }
-        valueTile("voltsOne", "device.voltsOne", decoration: "flat") {
-        	state "default", label:'${currentValue}'
+        valueTile("voltsOne", "device.voltsOne") {
+        	state(
+        		"default", 
+        		label:'${currentValue}',
+       			backgroundColors:[
+            		[value: "115.6 Volts", 	color: "#bc2323"],
+                	[value: "117.8 Volts", 	color: "#D04E00"],
+                	[value: "120.0 Volts", 	color: "#44B621"],
+                	[value: "122.2 Volts", 	color: "#D04E00"],
+                	[value: "124.4 Volts", 	color: "#bc2323"]
+            	]
+            )
         }
-        valueTile("voltsTwo", "device.voltsTwo", decoration: "flat") {
-        	state "default", label:'${currentValue}'
+        valueTile("voltsTwo", "device.voltsTwo") {
+        	state(
+        		"default", 
+        		label:'${currentValue}',
+    			backgroundColors:[
+            		[value: "115.6 Volts", 	color: "#bc2323"],
+                	[value: "117.8 Volts", 	color: "#D04E00"],
+                	[value: "120.0 Volts", 	color: "#44B621"],
+                	[value: "122.2 Volts", 	color: "#D04E00"],
+                	[value: "124.4 Volts", 	color: "#bc2323"]
+            	]
+            )
         }
     
     // Amps row
@@ -273,12 +305,12 @@ metadata {
     			color: "#000000", 
     			backgroundColors:[
 					[value: "0 Amps", 	color: "#153591"],
-					[value: "25 Amps", 	color: "#1e9cbb"],
-					[value: "50 Amps", 	color: "#90d2a7"],
-					[value: "75 Amps", 	color: "#44b621"],
-					[value: "100 Amps", color: "#f1d801"],
-					[value: "125 Amps", color: "#d04e00"], 
-					[value: "150 Amps", color: "#bc2323"]
+					[value: "12 Amps", 	color: "#1e9cbb"],
+					[value: "25 Amps", 	color: "#90d2a7"],
+					[value: "37 Amps", 	color: "#44b621"],
+					[value: "50 Amps", color: "#f1d801"],
+					[value: "62 Amps", color: "#d04e00"], 
+					[value: "75 Amps", color: "#bc2323"]
 				]
 			)
         }
@@ -290,12 +322,12 @@ metadata {
     			color: "#000000", 
     			backgroundColors:[
 					[value: "0 Amps", 	color: "#153591"],
-					[value: "25 Amps", 	color: "#1e9cbb"],
-					[value: "50 Amps", 	color: "#90d2a7"],
-					[value: "75 Amps", 	color: "#44b621"],
-					[value: "100 Amps", color: "#f1d801"],
-					[value: "125 Amps", color: "#d04e00"], 
-					[value: "150 Amps", color: "#bc2323"]
+					[value: "12 Amps", 	color: "#1e9cbb"],
+					[value: "25 Amps", 	color: "#90d2a7"],
+					[value: "37 Amps", 	color: "#44b621"],
+					[value: "50 Amps", color: "#f1d801"],
+					[value: "62 Amps", color: "#d04e00"], 
+					[value: "75 Amps", color: "#bc2323"]
 				]
 			)        		
         }
@@ -309,7 +341,7 @@ metadata {
 			state "default", label:'refresh', action:"refresh.refresh", icon:"st.secondary.refresh-icon"
 		}
 		standardTile("configure", "device.power", inactiveLabel: false) {
-			state "configure", label:'', action:"configuration.configure", icon:"st.secondary.configure"
+			state "configure", label:'', action: "configure", icon:"st.secondary.configure"
 		}
 		standardTile("toggle", "device.power", inactiveLabel: false) {
 			state "default", label: "toggle", action: "toggleDisplay", icon: "st.motion.motion.inactive"
@@ -336,8 +368,23 @@ metadata {
 		])
 	}
     preferences {
-    	input "kWhCost", "string", title: "\$/kWh (0.16)", defaultValue: "0.16" as String
+    	input "kWhCost", "string", title: "\$/kWh (0.16)", description: "0.16", defaultValue: "0.16" as String
+    	input "kWhDelay", "number", title: "kWh report seconds (60)", description: "60", defaultValue: "60"
+    	input "detailDelay", "number", title: "Detail report seconds (30)", description: "30", defaultValue: "30"
     }
+}
+
+def installed() {
+	state.display = 1
+	configure()
+	reset()
+	refresh()
+}
+
+def updated() {
+	configure()
+	resetDisplay()
+	refresh()
 }
 
 def parse(String description) {
@@ -566,12 +613,12 @@ def poll() {
 }
 
 def toggleDisplay() {
-	if (state.display) {
-		if (state.display == 1) { state.display = 2 }
-		else { state.display = 1 }
+	if (state.display == 1) { 
+		state.display = 2 
 	}
-	else { state.display = 1 }
-	
+	else { 
+		state.display = 1
+	}
 	resetDisplay()
 }
 
@@ -614,7 +661,7 @@ def reset() {
     state.voltsLow = 999
     state.voltsLowDisp = ""
     
-    if (!state.display) { state.display = 1 }
+//    if (!state.display) { state.display = 1 }
 
     def dateString = new Date().format("m/d/YY", location.timeZone)
     def timeString = new Date().format("h:mm a", location.timeZone)    
@@ -639,6 +686,9 @@ def configure() {
 	// TODO: Turn on reporting for each leg of power - display as alternate view (Currently those values are
     //		 returned as zwaveEvents...they probably aren't implemented in the core Meter device yet.
 
+	def kDelay = new BigInteger( settings.kWhDelay )
+    def dDelay = new BigInteger( settings.detailDelay)
+    
 	def cmd = delayBetween([
 		zwave.configurationV1.configurationSet(parameterNumber: 3, size: 1, scaledConfigurationValue: 0).format(),		// Enable selective reporting
 		zwave.configurationV1.configurationSet(parameterNumber: 4, size: 2, scaledConfigurationValue: 30).format(),		// Don't send unless watts have increased by 30
@@ -648,11 +698,11 @@ def configure() {
         zwave.configurationV1.configurationSet(parameterNumber: 9, size: 1, scaledConfigurationValue: 5).format(),		// Or by 10% (these 3 are the default values
         zwave.configurationV1.configurationSet(parameterNumber: 10, size: 1, scaledConfigurationValue: 5).format(),		// Or by 10% (these 3 are the default values
 		zwave.configurationV1.configurationSet(parameterNumber: 101, size: 4, scaledConfigurationValue: 6145).format(),   //  Combined and Clamp power in kWh
-		zwave.configurationV1.configurationSet(parameterNumber: 111, size: 4, scaledConfigurationValue: 60).format(), 	// Every 60 Seconds
+		zwave.configurationV1.configurationSet(parameterNumber: 111, size: 4, scaledConfigurationValue: kDelay).format(), 	// Every 60 Seconds
 		zwave.configurationV1.configurationSet(parameterNumber: 102, size: 4, scaledConfigurationValue: 14).format(),   // Total Voltage, Amps Watts
-		zwave.configurationV1.configurationSet(parameterNumber: 112, size: 4, scaledConfigurationValue: 20).format(), 	// every 20 seconds
+		zwave.configurationV1.configurationSet(parameterNumber: 112, size: 4, scaledConfigurationValue: dDelay).format(), 	// every 20 seconds
 		zwave.configurationV1.configurationSet(parameterNumber: 103, size: 4, scaledConfigurationValue: 1770240).format(),	// Amps, Voltage & Power for each clamp
-		zwave.configurationV1.configurationSet(parameterNumber: 113, size: 4, scaledConfigurationValue: 20).format() 	// every 20 seconds
+		zwave.configurationV1.configurationSet(parameterNumber: 113, size: 4, scaledConfigurationValue: dDelay).format() 	// every 20 seconds
 	])
 	log.debug cmd
 
