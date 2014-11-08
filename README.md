@@ -18,13 +18,12 @@ For current users, you SHOULD be able to publish this for yourself, and then cha
 
 For NEW users, after you install this code in your IDE and Publish it, you should be able to simply add your HEMv2 to ST and this driver will (should) be automatically selected. If not, you will have to use the IDE under My Devices to edit the device and change its driver to this Aeon HEMv2+ one.
 
-IMPORTANT!
-----------
-After installation, you need to do TWO things:
+There are 3 preferences associated with this device:
+1) Cost per kWh - defaults to $0.16.
+2) kWh update delay in seconds - defaults to 60. Note that the HEMv2 doesn't update the TOTAL kWh more frequently than 2 minutes, so you may see L1/L2 values don't add up to the Total displayed
+3) Details update delay in seconds - defaults to 30
 
-1) Push the Configuration button - this configures the reporting of your HEMv2 to send all the details we need an a frequent basis (1 minute updates on the kWh displays, and 20 second updates on everything else).
-
-2) Push the RESET button - this will reset all the values necessary for the display to be updated properly. If you don't do this, you'll never see data; if you do, you should start seeing updates within 60 seconds.
+As of Nov 8 2014, the driver should initialize itself when you install it, and it SHOULD reconfigure the HEMv2 device when you update the preferences. 
 
 Android users will likely find that NOTHING works, because of all the colors used in the tiles. Sorry about that.
 
