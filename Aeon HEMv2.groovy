@@ -52,13 +52,14 @@
  *				- Reworked all tiles for look, color, text formatting, & readability
  *	2014-09-20: Added HEMv1 Battery reporting (from Brock Haymond)
  *	2014-11-06: Added alternate display of L2 and L2 values instead of Low/High, based on version by Jayant Jhamb
+ *  2014-11-11: Massive overhaul completed (see GitHub comments for specifics)
  * 				- 
  */
 metadata {
 	// Automatically generated. Make future change here.
 	definition (
 		name: 		"Aeon HEMv2+", 
-		namespace: 	"smartthings",
+		namespace: 	"Green Living",
 		category: 	"Green Living",
 		author: 	"Barry A. Burke"
 	) 
@@ -74,6 +75,7 @@ metadata {
         attribute "energy", "string"
         attribute "power", "string"
         attribute "volts", "string"
+        attribute "voltage", "string"		// We'll deliver both, since the correct one is not defined anywhere
         attribute "amps", "string"
         
         attribute "energyDisp", "string"
@@ -120,7 +122,6 @@ metadata {
 	tiles {
     
     // Watts row
-
 		valueTile("powerDisp", "device.powerDisp") {
 			state (
 				"default", 
@@ -213,7 +214,6 @@ metadata {
         }
 
 	// Power row
-    
 		valueTile("energyDisp", "device.energyDisp") {
 			state(
 				"default", 
@@ -237,7 +237,6 @@ metadata {
         }
         
     // Volts row
-    
         valueTile("voltsDisp", "device.voltsDisp") {
         	state(
         		"default", 
@@ -256,6 +255,7 @@ metadata {
         		"default", 
         		label:'${currentValue}',
        			backgroundColors:[
+       				[value: "L1", color: "#ffffff"],
             		[value: "115.6 Volts", 	color: "#bc2323"],
                 	[value: "117.8 Volts", 	color: "#D04E00"],
                 	[value: "120.0 Volts", 	color: "#44B621"],
@@ -269,6 +269,7 @@ metadata {
         		"default", 
         		label:'${currentValue}',
     			backgroundColors:[
+    				[value: "L2", color: "#ffffff"],
             		[value: "115.6 Volts", 	color: "#bc2323"],
                 	[value: "117.8 Volts", 	color: "#D04E00"],
                 	[value: "120.0 Volts", 	color: "#44B621"],
@@ -279,7 +280,6 @@ metadata {
         }
     
     // Amps row
-    
         valueTile("ampsDisp", "device.ampsDisp") {
         	state (
         		"default", 
@@ -333,7 +333,6 @@ metadata {
         }
     
     // Controls row
-    
 		standardTile("reset", "device.energy", inactiveLabel: false) {
 			state "default", label:'reset', action:"reset", icon: "st.Health & Wellness.health7"
 		}
@@ -376,8 +375,8 @@ metadata {
 
 def installed() {
 	state.display = 1
-	configure()
-	reset()
+	reset()						// The order here is important
+	configure()					// Since reports can start coming in even before we finish configure()
 	refresh()
 }
 
@@ -402,8 +401,6 @@ def parse(String description) {
 }
 
 def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
-//	log.debug "zwaveEvent received ${cmd}"
-    
     def dispValue
     def newValue
     def formattedValue
@@ -416,12 +413,12 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
         	if (newValue != state.energyValue) {
         		formattedValue = String.format("%5.2f", newValue)
     			dispValue = "${formattedValue}\nkWh"
-                sendEvent(name: "energyDisp", value: dispValue as String, unit: "")
+                sendEvent(name: "energyDisp", value: dispValue as String, unit: "", descriptionText: "Display Energy: ${newValue} kVh")
                 state.energyValue = newValue
                 BigDecimal costDecimal = newValue * ( kWhCost as BigDecimal )
                 def costDisplay = String.format("%5.2f",costDecimal)
                 state.costDisp = "Cost\n\$"+costDisplay
-                if (state.display == 1) { sendEvent(name: "energyTwo", value: state.costDisp, unit: "") }
+                if (state.display == 1) { sendEvent(name: "energyTwo", value: state.costDisp, unit: "", descriptionText: "Display Cost: \$${costDisp}") }
                 [name: "energy", value: newValue, unit: "kWh", descriptionText: "Total Energy: ${formattedValue} kWh"]
             }
 		} 
@@ -430,7 +427,7 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
             if (newValue != state.energyValue) {
             	formattedValue = String.format("%5.2f", newValue)
     			dispValue = "${formattedValue}\nkVAh"
-                sendEvent(name: "energyDisp", value: dispValue as String, unit: "")
+                sendEvent(name: "energyDisp", value: dispValue as String, unit: "", descriptionText: "Display Energy: ${formattedValue} kVAh")
                 state.energyValue = newValue
 				[name: "energy", value: newValue, unit: "kVAh", descriptionText: "Total Energy: ${formattedValue} kVAh"]
             }
@@ -439,17 +436,17 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
         	newValue = Math.round(cmd.scaledMeterValue)		// really not worth the hassle to show decimals for Watts
         	if (newValue != state.powerValue) {
     			dispValue = newValue+"\nWatts"
-                sendEvent(name: "powerDisp", value: dispValue as String, unit: "")
+                sendEvent(name: "powerDisp", value: dispValue as String, unit: "", descriptionText: "Display Power: ${newValue} Watts")
                 
                 if (newValue < state.powerLow) {
                 	dispValue = newValue+"\n"+timeString
-                	if (state.display == 1) { sendEvent(name: "powerOne", value: dispValue as String, unit: "")	}
+                	if (state.display == 1) { sendEvent(name: "powerOne", value: dispValue as String, unit: "", descriptionText: "Lowest Power: ${newValue} Watts")	}
                     state.powerLow = newValue
                     state.powerLowDisp = dispValue
                 }
                 if (newValue > state.powerHigh) {
                 	dispValue = newValue+"\n"+timeString
-                	if (state.display == 1) { sendEvent(name: "powerTwo", value: dispValue as String, unit: "")	}
+                	if (state.display == 1) { sendEvent(name: "powerTwo", value: dispValue as String, unit: "", descriptionText: "Highest Power: ${newValue} Watts")	}
                     state.powerHigh = newValue
                     state.powerHighDisp = dispValue
                 }
@@ -464,22 +461,23 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
         	if (newValue != state.voltsValue) {
         		formattedValue = String.format("%5.2f", newValue)
     			dispValue = "${formattedValue}\nVolts"
-                sendEvent(name: "voltsDisp", value: dispValue as String, unit: "")
+                sendEvent(name: "voltsDisp", value: dispValue as String, unit: "", descriptionText: "Display Voltage: ${formattedValue} Volts")
 
                 if (newValue < state.voltsLow) {
                 	dispValue = formattedValue+"\n"+timeString                	
-                	if (state.display == 1) { sendEvent(name: "voltsOne", value: dispValue as String, unit: "")	}
+                	if (state.display == 1) { sendEvent(name: "voltsOne", value: dispValue as String, unit: "", descriptionText: "Lowest Voltage: ${formattedValue} Volts")	}
                     state.voltsLow = newValue
                     state.voltsLowDisp = dispValue
                 }
                 if (newValue > state.voltsHigh) {
                     dispValue = formattedValue+"\n"+timeString
-                	if (state.display == 1) { sendEvent(name: "voltsTwo", value: dispValue as String, unit: "") }
+                	if (state.display == 1) { sendEvent(name: "voltsTwo", value: dispValue as String, unit: "", descriptionText: "Highest Voltage: ${formattedValue} Volts") }
                     state.voltsHigh = newValue
                     state.voltsHighDisp = dispValue
                 }                
                 state.voltsValue = newValue
-				[name: "volts", value: newValue, unit: "V", descriptionText: "Total Voltage: ${formattedValue} Volts"]
+                sendEvent( name: "voltage", value: newValue, unit: "V", descriptionText: "Total Voltage: ${formattedValue} Volts")
+				[name: "volts", value: newValue, unit: "V", descriptionText: "Total Volts: ${formattedValue} Volts"]
             }
         }
         else if (cmd.scale==1) {
@@ -487,17 +485,17 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
         	if (newValue != state.ampsValue) {
         		formattedValue = String.format("%5.2f", newValue)
     			dispValue = "${formattedValue}\nAmps"
-                sendEvent(name: "ampsDisp", value: dispValue as String, unit: "")
+                sendEvent(name: "ampsDisp", value: dispValue as String, unit: "", descriptionText: "Display Current: ${formattedValue} Amps")
                 
                 if (newValue < state.ampsLow) {
                 	dispValue = formattedValue+"\n"+timeString
-                	if (state.display == 1) { sendEvent(name: "ampsOne", value: dispValue as String, unit: "") }
+                	if (state.display == 1) { sendEvent(name: "ampsOne", value: dispValue as String, unit: "", descriptionText: "Lowest Current: ${formattedValue} Amps") }
                     state.ampsLow = newValue
                     state.ampsLowDisp = dispValue
                 }
                 if (newValue > state.ampsHigh) {
                 	dispValue = formattedValue+"\n"+timeString
-                	if (state.display == 1) { sendEvent(name: "ampsTwo", value: dispValue as String, unit: "") }
+                	if (state.display == 1) { sendEvent(name: "ampsTwo", value: dispValue as String, unit: "", descriptionText: "Highest Current: ${formattedValue} Amps") }
                     state.ampsHigh = newValue
                     state.ampsHighDisp = dispValue
                 }                
@@ -509,87 +507,160 @@ def zwaveEvent(physicalgraph.zwave.commands.meterv1.MeterReport cmd) {
 }
 
 def zwaveEvent(physicalgraph.zwave.commands.multichannelv3.MultiChannelCmdEncap cmd) {
-// 	log.debug "MultiChannelCmdEncap $cmd"
-//  log.debug "cmd.commandClass == ${cmd.commandClass} // cmd.command == ${cmd.command} // cmd.parameter == ${cmd.parameter} // cmd.sourceEndPoint == ${cmd.sourceEndPoint}"
-
 	def dispValue
 	def newValue
 	def formattedValue
-	
-	if (state.display == 2) {
 
-    	if (cmd.commandClass == 50) {    
-    		def encapsulatedCommand = cmd.encapsulatedCommand([0x30: 1, 0x31: 1]) // can specify command class versions here like in zwave.parse
-			if (encapsulatedCommand) {
-				if (cmd.sourceEndPoint == 1) {
-
-            // -- Test
-//            log.debug encapsulatedCommand
-//            log.debug zwaveEvent(encapsulatedCommand)
-            //--- Test           
-
-					if (encapsulatedCommand.scale == 2 ) {
-						newValue = Math.round(encapsulatedCommand.scaledMeterValue)
-						formattedValue = newValue as String
-						dispValue = "${formattedValue}\nWatts"
-						[name: "powerOne", value:dispValue, unit: "", descriptionText: "L1 Power: ${formattedValue} Watts"]
-					} 
-					else if (encapsulatedCommand.scale == 0 ){
-						newValue = Math.round(encapsulatedCommand.scaledMeterValue * 100) / 100
-						formattedValue = String.format("%5.2f", newValue)
-						dispValue = "${formattedValue}\nkWh"
-						[name: "energyOne", value: dispValue, unit: "", descriptionText: "L1 Energy: ${formattedValue} kWh"]
-					} 
-					else if (encapsulatedCommand.scale == 5 ) {
-						newValue = Math.round(encapsulatedCommand.scaledMeterValue * 100) / 100
-						formattedValue = String.format("%5.2f", newValue)
-						dispValue = "${formattedValue}\nAmps"
-						[name: "ampsOne", value: dispValue, unit: "", descriptionText: "L1 Current: ${formattedValue} Amps"]
-                	} 
-                	else if (encapsulatedCommand.scale == 4 ){
-                		newValue = Math.round(encapsulatedCommand.scaledMeterValue * 100) / 100
-						formattedValue = String.format("%5.2f", newValue)
-						dispValue = "${formattedValue}\nVolts"
-						[name: "voltsOne", value:dispValue, unit: "", descriptionText: "L1 Voltage: ${formattedValue} Volts"]
-                	}               
+   	if (cmd.commandClass == 50) {    
+   		def encapsulatedCommand = cmd.encapsulatedCommand([0x30: 1, 0x31: 1]) // can specify command class versions here like in zwave.parse
+		if (encapsulatedCommand) {
+			if (cmd.sourceEndPoint == 1) {
+				if (encapsulatedCommand.scale == 2 ) {
+					newValue = Math.round(encapsulatedCommand.scaledMeterValue)
+					formattedValue = newValue as String
+					dispValue = "${formattedValue}\nWatts"
+					if (dispValue != state.powerL1Disp) {
+						state.powerL1Disp = dispValue
+						if (state.display == 2) {
+							[name: "powerOne", value: dispValue, unit: "", descriptionText: "L1 Power: ${formattedValue} Watts"]
+						}
+						else {
+						}
+					}
 				} 
-				else if (cmd.sourceEndPoint == 2) {
-					if (encapsulatedCommand.scale == 2 ){
-						newValue = Math.round(encapsulatedCommand.scaledMeterValue)
-						formattedValue = newValue as String
-						dispValue = "${formattedValue}\nWatts"
-						[name: "powerTwo", value:dispValue, unit: "", descriptionText: "L2 Power: ${formattedValue} Watts"]
-					} 
-					else if (encapsulatedCommand.scale == 0 ){
-						newValue = Math.round(encapsulatedCommand.scaledMeterValue * 100) / 100
-						newValue = encapsulatedCommand.scaledMeterValue
-						formattedValue = String.format("%5.2f", newValue)
-						dispValue = "${formattedValue}\nkWh"
-						[name: "energyTwo", value: dispValue, unit: "", descriptionText: "L2 Energy: ${formattedValue} kWh"]
-					} 
-					else if (encapsulatedCommand.scale == 5 ){
-                		newValue = encapsulatedCommand.scaledMeterValue
-						formattedValue = String.format("%5.2f", newValue)
-						dispValue = "${formattedValue}\nAmps"
-						[name: "ampsTwo", value: dispValue, unit: "", descriptionText: "L2 Current: ${formattedValue} Amps"]
-		    		}
-		    		else if (encapsulatedCommand.scale == 4 ){
-                		newValue = Math.round(encapsulatedCommand.scaledMeterValue * 100) / 100
-						formattedValue = String.format("%5.2f", newValue)
-						dispValue = "${formattedValue}\nVolts"
-						[name: "voltsTwo", value: dispValue as String, unit: "", descriptionText: "L2 Voltage: ${formattedValue} Volts"]
-                	}               			
+				else if (encapsulatedCommand.scale == 0 ){
+					newValue = Math.round(encapsulatedCommand.scaledMeterValue * 100) / 100
+					formattedValue = String.format("%5.2f", newValue)
+					dispValue = "${formattedValue}\nkWh"
+					if (dispValue != state.energyL1Disp) {
+						state.energyL1Disp = dispValue
+						if (state.display == 2) {
+							[name: "energyOne", value: dispValue, unit: "", descriptionText: "L1 Energy: ${formattedValue} kWh"]
+						}
+						else {
+						}
+					}
 				}
+				else if (encapsulatedCommand.scale == 1 ){
+					newValue = Math.round(encapsulatedCommand.scaledMeterValue * 100) / 100
+					formattedValue = String.format("%5.2f", newValue)
+					dispValue = "${formattedValue}\nkVAh"
+					if (dispValue != state.energyL1Disp) {
+						state.energyL1Disp = dispValue
+						if (state.display == 2) {
+							[name: "energyOne", value: dispValue, unit: "", descriptionText: "L1 Energy: ${formattedValue} kVAh"]
+						}
+						else {
+						}
+					}
+				}
+				else if (encapsulatedCommand.scale == 5 ) {
+					newValue = Math.round(encapsulatedCommand.scaledMeterValue * 100) / 100
+					formattedValue = String.format("%5.2f", newValue)
+					dispValue = "${formattedValue}\nAmps"
+					if (dispValue != state.ampsL1Disp) {
+						state.ampsL1Disp = dispValue
+						if (state.display == 2) {
+							[name: "ampsOne", value: dispValue, unit: "", descriptionText: "L1 Current: ${formattedValue} Amps"]
+						}
+						else {
+						}
+					}
+               	} 
+/* Ignore voltage updates, because they always match the current Total Voltage               	
+               	else if (encapsulatedCommand.scale == 4 ){
+               		newValue = Math.round(encapsulatedCommand.scaledMeterValue * 100) / 100
+					formattedValue = String.format("%5.2f", newValue)
+					dispValue = "${formattedValue}\nVolts"
+					if (dispValue != statevoltsL1Disp) {
+						state.voltsL1Disp = dispValue
+						if (state.display == 2) {
+							[name: "voltsOne", value:dispValue, unit: "", descriptionText: "L1 Voltage: ${formattedValue} Volts"]
+						}
+						else {
+						}
+					}
+               	}               
+*/               	
+			} 
+			else if (cmd.sourceEndPoint == 2) {
+				if (encapsulatedCommand.scale == 2 ){
+					newValue = Math.round(encapsulatedCommand.scaledMeterValue)
+					formattedValue = newValue as String
+					dispValue = "${formattedValue}\nWatts"
+					if (dispValue != state.powerL2Disp) {
+						state.powerL2Disp = dispValue
+						if (state.display == 2) {
+							[name: "powerTwo", value: dispValue, unit: "", descriptionText: "L2 Power: ${formattedValue} Watts"]
+						}
+						else {
+						}
+					}
+				} 
+				else if (encapsulatedCommand.scale == 0 ){
+					newValue = Math.round(encapsulatedCommand.scaledMeterValue * 100) / 100
+					formattedValue = String.format("%5.2f", newValue)
+					dispValue = "${formattedValue}\nkWh"
+					if (dispValue != state.energyL2Disp) {
+						state.energyL2Disp = dispValue
+						if (state.display == 2) {
+							[name: "energyTwo", value: dispValue, unit: "", descriptionText: "L2 Energy: ${formattedValue} kWh"]
+						}
+						else {
+						}
+					}
+				} 
+				else if (encapsulatedCommand.scale == 1 ){
+					newValue = Math.round(encapsulatedCommand.scaledMeterValue * 100) / 100
+					formattedValue = String.format("%5.2f", newValue)
+					dispValue = "${formattedValue}\nkVAh"
+					if (dispValue != state.energyL2Disp) {
+						state.energyL2Disp = dispValue
+						if (state.display == 2) {
+							[name: "energyTwo", value: dispValue, unit: "", descriptionText: "L2 Energy: ${formattedValue} kVAh"]
+						}
+						else {
+						}
+					}
+				}				
+				else if (encapsulatedCommand.scale == 5 ){
+               		newValue = Math.round(encapsulatedCommand.scaledMeterValue * 100) / 100
+					formattedValue = String.format("%5.2f", newValue)
+					dispValue = "${formattedValue}\nAmps"
+					if (dispValue != state.ampsL2Disp) {
+						state.ampsL2Disp = dispValue
+						if (state.display == 2) {
+							[name: "ampsTwo", value: dispValue, unit: "", descriptionText: "L2 Current: ${formattedValue} Amps"]
+						}
+						else {
+						}
+					}
+				}
+/* Ignore voltage updates, because they always match the current Total Voltage
+	    		else if (encapsulatedCommand.scale == 4 ){
+               		newValue = Math.round(encapsulatedCommand.scaledMeterValue * 100) / 100
+					formattedValue = String.format("%5.2f", newValue)
+					dispValue = "${formattedValue}\nVolts"
+					if (dispValue != statevoltsL2Disp) {
+						state.voltsL2Disp = dispValue
+						if (state.display == 2) {
+							[name: "voltsTwo", value:dispValue, unit: "", descriptionText: "L2 Voltage: ${formattedValue} Volts"]
+						}
+						else {
+						}
+					}
+               	}               			
+*/               	
 			}
 		}
 	}
 }
 
-
 def zwaveEvent(physicalgraph.zwave.commands.batteryv1.BatteryReport cmd) {
 	def map = [:]
 	map.name = "battery"
 	map.unit = "%"
+	
 	if (cmd.batteryLevel == 0xFF) {
 		map.value = 1
 		map.descriptionText = "${device.displayName} battery is low"
@@ -608,10 +679,12 @@ def zwaveEvent(physicalgraph.zwave.Command cmd) {
 	[:]
 }
 
-def refresh() {
+def refresh() {			// Request HEMv2 to send us the latest values for the 4 we are tracking
 	delayBetween([
-		zwave.meterV2.meterGet(scale: 0).format(),
-		zwave.meterV2.meterGet(scale: 2).format()
+		zwave.meterV2.meterGet(scale: 0).format(),		// Change 0 to 1 if international version
+		zwave.meterV2.meterGet(scale: 2).format(),
+		zwave.meterV2.meterGet(scale: 4).format(),
+		zwave.meterV2.meterGet(scale: 5).format()
 	])
 }
 
@@ -630,6 +703,8 @@ def toggleDisplay() {
 }
 
 def resetDisplay() {
+	log.debug "resetDisplay() - energyL1Disp: ${state.energyL1Disp}"
+	
 	if ( state.display == 1 ) {
     	sendEvent(name: "voltsOne", value: state.voltsLowDisp, unit: "")
     	sendEvent(name: "ampsOne", value: state.ampsLowDisp, unit: "")    
@@ -642,19 +717,24 @@ def resetDisplay() {
 	}
 	else {
     	sendEvent(name: "voltsOne", value: "L1", unit: "")
-    	sendEvent(name: "ampsOne", value: "", unit: "")    
-		sendEvent(name: "powerOne", value: "", unit: "")     
-    	sendEvent(name: "energyOne", value: "", unit: "")	
+    	sendEvent(name: "ampsOne", value: state.ampsL1Disp, unit: "")    
+		sendEvent(name: "powerOne", value: state.powerL1Disp, unit: "")     
+    	sendEvent(name: "energyOne", value: state.energyL1Disp, unit: "")	
 		sendEvent(name: "voltsTwo", value: "L2", unit: "")
-    	sendEvent(name: "ampsTwo", value: "", unit: "")
-    	sendEvent(name: "powerTwo", value: "", unit: "")
-    	sendEvent(name: "energyTwo", value: "", unit: "")
+    	sendEvent(name: "ampsTwo", value: state.ampsL2Disp, unit: "")
+    	sendEvent(name: "powerTwo", value: state.powerL2Disp, unit: "")
+    	sendEvent(name: "energyTwo", value: state.energyL2Disp, unit: "")
 	}
 }
 
 def reset() {
 	log.debug "${device.name} reset"
 
+	state.energyValue = -1
+	state.powerValue = -1
+	state.ampsValue = -1
+	state.voltsValue = -1
+	
     state.powerHigh = 0
     state.powerHighDisp = ""
     state.powerLow = 99999
@@ -668,7 +748,16 @@ def reset() {
     state.voltsLow = 999
     state.voltsLowDisp = ""
     
-//    if (!state.display) { state.display = 1 }
+    state.energyL1Disp = ""
+    state.energyL2Disp = ""
+    state.powerL1Disp = ""
+    state.powerL2Disp = ""
+    state.ampsL1Disp = ""
+    state.ampsL2Disp = ""
+    state.voltsL1Disp = ""
+    state.voltsL2Disp = ""
+    
+    if (!state.display) { state.display = 1 }	// Sometimes it appears that installed() isn't called
 
     def dateString = new Date().format("m/d/YY", location.timeZone)
     def timeString = new Date().format("h:mm a", location.timeZone)    
@@ -683,16 +772,16 @@ def reset() {
 
 // No V1 available
 	def cmd = delayBetween( [
-		zwave.meterV2.meterReset().format(),
-		zwave.meterV2.meterGet(scale: 0).format()
+		zwave.meterV2.meterReset().format(),			// Reset all values
+		zwave.meterV2.meterGet(scale: 0).format(),		// Request the values we are interested in (0-->1 for kVAh)
+		zwave.meterV2.meterGet(scale: 2).format(),
+		zwave.meterV2.meterGet(scale: 4).format(),
+		zwave.meterV2.meterGet(scale: 5).format()
 	])
     cmd
 }
 
 def configure() {
-	// TODO: Turn on reporting for each leg of power - display as alternate view (Currently those values are
-    //		 returned as zwaveEvents...they probably aren't implemented in the core Meter device yet.
-
 	def kDelay = new BigInteger( settings.kWhDelay )
     def dDelay = new BigInteger( settings.detailDelay)
     
