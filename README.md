@@ -5,7 +5,7 @@ My version of the ST device driver for the Aeon HEM, exended to support the V2 v
 
 Now reports as Aeon HEMv2+
 
-Plus version adds a secondary display that shows kWh, Watts, Amps and Volts per each leg, instead of the High/Low values. You can toggle back and forth between the displays, but the L1/L2 values are only monitored while viewing that page (they aren't tracked in the background like the High/Low values are).
+Plus version adds a secondary display that shows kWh, Watts, Amps and Volts per each leg, instead of the High/Low values. You can toggle back and forth between the displays, and all the values are continually tracked - even while they aren't displayed.
 
 WARNING
 =======
@@ -29,6 +29,8 @@ Android users will likely find that NOTHING works, because of all the colors use
 
 Advanced Usage
 --------------
-If you'd like to have the kWh value and cost reset to zero, simply call the (device).reset() command. I use a modified version of Pollster to do this at midnight every day; others have the device resetting weekly or even monthly.
+If you'd like to have the kWh value, calculated cost, and all the high/low stats reset to zero, simply call the (device).reset() command (or push the reset button). I use a modified version of Pollster to do this at midnight every day; others have the device resetting weekly or even monthly.
 
 You can also post the data to xively - I've added my SmartApp that does this for me to this repository for those interested in getting into that. No assistance promised - use AS-IS or modify.
+
+Since I couldn't find a specification for the name of the Volts attribute, and since some seem to prefer "Voltage" instead of "Volts", the driver now reports BOTH ("Voltage" is silent - you won't see it in the Live Logs, but it's there in events and Activity log).
