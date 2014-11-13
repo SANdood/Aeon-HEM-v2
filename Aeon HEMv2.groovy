@@ -333,16 +333,16 @@ metadata {
         }
     
     // Controls row
-		standardTile("reset", "device.energy", inactiveLabel: false) {
+		standardTile("reset", "command.reset", inactiveLabel: false) {
 			state "default", label:'reset', action:"reset", icon: "st.Health & Wellness.health7"
 		}
-		standardTile("refresh", "device.power", inactiveLabel: false) {
+		standardTile("refresh", "command.refresh", inactiveLabel: false) {
 			state "default", label:'refresh', action:"refresh.refresh", icon:"st.secondary.refresh-icon"
 		}
-		standardTile("configure", "device.power", inactiveLabel: false) {
+		standardTile("configure", "command.configure", inactiveLabel: false) {
 			state "configure", label:'', action: "configure", icon:"st.secondary.configure"
 		}
-		standardTile("toggle", "device.power", inactiveLabel: false) {
+		standardTile("toggle", "command.toggleDisplay", inactiveLabel: false) {
 			state "default", label: "toggle", action: "toggleDisplay", icon: "st.motion.motion.inactive"
 		}
 		/* HEMv1 has a battery; v2 is line-powered */
@@ -680,19 +680,25 @@ def zwaveEvent(physicalgraph.zwave.Command cmd) {
 }
 
 def refresh() {			// Request HEMv2 to send us the latest values for the 4 we are tracking
+	log.debug "refresh()"
+    
 	delayBetween([
 		zwave.meterV2.meterGet(scale: 0).format(),		// Change 0 to 1 if international version
 		zwave.meterV2.meterGet(scale: 2).format(),
 		zwave.meterV2.meterGet(scale: 4).format(),
 		zwave.meterV2.meterGet(scale: 5).format()
 	])
+    resetDisplay()
 }
 
 def poll() {
+	log.debug "poll()"
 	refresh()
 }
 
 def toggleDisplay() {
+	log.debug "toggleDisplay()"
+    
 	if (state.display == 1) { 
 		state.display = 2 
 	}
@@ -728,7 +734,7 @@ def resetDisplay() {
 }
 
 def reset() {
-	log.debug "${device.name} reset"
+	log.debug "reset()"
 
 	state.energyValue = -1
 	state.powerValue = -1
@@ -782,6 +788,8 @@ def reset() {
 }
 
 def configure() {
+	log.debug "configure()"
+    
 	def kDelay = new BigInteger( settings.kWhDelay )
     def dDelay = new BigInteger( settings.detailDelay)
     
