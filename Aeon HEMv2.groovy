@@ -790,8 +790,8 @@ def reset() {
 def configure() {
 	log.debug "configure()"
     
-	def kDelay = new BigInteger( settings.kWhDelay )
-    def dDelay = new BigInteger( settings.detailDelay)
+	Integer kDelay = settings.kWhDelay as Integer
+    Integer dDelay = settings.detailDelay as Integer
     
 	def cmd = delayBetween([
 		zwave.configurationV1.configurationSet(parameterNumber: 3, size: 1, scaledConfigurationValue: 0).format(),			// Disable (=0) selective reporting
