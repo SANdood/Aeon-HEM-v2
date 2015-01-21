@@ -765,7 +765,7 @@ def reset() {
     
     if (!state.display) { state.display = 1 }	// Sometimes it appears that installed() isn't called
 
-    def dateString = new Date().format("m/d/YY", location.timeZone)
+    def dateString = new Date().format("M/d/YY", location.timeZone)
     def timeString = new Date().format("h:mm a", location.timeZone)    
 	state.lastResetTime = "Since\n"+dateString+"\n"+timeString
 	state.costDisp = "Cost\n--"
@@ -790,8 +790,8 @@ def reset() {
 def configure() {
 	log.debug "configure()"
     
-	Integer kDelay = settings.kWhDelay as Integer
-    Integer dDelay = settings.detailDelay as Integer
+	def kDelay = settings.kWhDelay as Integer
+    def dDelay = settings.detailDelay as Integer
     
 	def cmd = delayBetween([
 		zwave.configurationV1.configurationSet(parameterNumber: 3, size: 1, scaledConfigurationValue: 0).format(),			// Disable (=0) selective reporting
