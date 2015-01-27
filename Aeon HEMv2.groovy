@@ -368,8 +368,8 @@ metadata {
 	}
     preferences {
     	input "kWhCost", "string", title: "\$/kWh (0.16)", description: "0.16", defaultValue: "0.16" as String
-    	input "kWhDelay", "number", title: "kWh report seconds (60)", description: "120", defaultValue: "120"
-    	input "detailDelay", "number", title: "Detail report seconds (30)", description: "30", defaultValue: "30"
+    	input "kWhDelay", "number", title: "kWh report seconds (60)", description: "120", defaultValue: 120
+    	input "detailDelay", "number", title: "Detail report seconds (30)", description: "30", defaultValue: 30
     }
 }
 
