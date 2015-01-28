@@ -793,6 +793,14 @@ def configure() {
 	def kDelay = settings.kWhDelay as Integer
     def dDelay = settings.detailDelay as Integer
     
+    if (kDelay == null) {		// Shouldn't have to do this, but there seem to be initialization errors
+		kDelay = 120
+	}
+
+	if (dDelay == null) {
+		dDelay = 30
+	}
+    
 	def cmd = delayBetween([
 		zwave.configurationV1.configurationSet(parameterNumber: 3, size: 1, scaledConfigurationValue: 0).format(),			// Disable (=0) selective reporting
 		zwave.configurationV1.configurationSet(parameterNumber: 4, size: 2, scaledConfigurationValue: 50).format(),			// Don't send whole HEM unless watts have changed by 30
