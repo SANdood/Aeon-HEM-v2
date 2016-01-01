@@ -125,7 +125,7 @@ metadata {
 		valueTile("powerDisp", "device.powerDisp") {
 			state (
 				"default", 
-				label:'${currentValue}', 
+				label:'${currentValue} Watts', 
             	foregroundColors:[
             		[value: 1, color: "#000000"],
             		[value: 10000, color: "#ffffff"]
@@ -155,7 +155,7 @@ metadata {
         valueTile("powerOne", "device.powerOne") {
         	state(
         		"default", 
-        		label:'${currentValue}', 
+        		label:'${currentValue} Watts', 
             	foregroundColors:[
             		[value: 1, color: "#000000"],
             		[value: 10000, color: "#ffffff"]
@@ -185,7 +185,7 @@ metadata {
         valueTile("powerTwo", "device.powerTwo") {
         	state(
         		"default", 
-        		label:'${currentValue}', 
+        		label:'${currentValue} Watts', 
             	foregroundColors:[
             		[value: 1, color: "#000000"],
             		[value: 10000, color: "#ffffff"]
@@ -240,7 +240,7 @@ metadata {
         valueTile("voltsDisp", "device.voltsDisp") {
         	state(
         		"default", 
-        		label: '${currentValue}', 
+        		label: '${currentValue} Volts', 
         		backgroundColors:[
             		[value: "115.6", 	color: "#bc2323"],
                 	[value: "117.8", 	color: "#D04E00"],
@@ -253,7 +253,7 @@ metadata {
         valueTile("voltsOne", "device.voltsOne") {
         	state(
         		"default", 
-        		label:'${currentValue}',
+        		label:'${currentValue} Volts',
        			backgroundColors:[
        				[value: "0", color: "#ffffff"],
             		[value: "115.6", 	color: "#bc2323"],
@@ -267,7 +267,7 @@ metadata {
         valueTile("voltsTwo", "device.voltsTwo") {
         	state(
         		"default", 
-        		label:'${currentValue}',
+        		label:'${currentValue} Volts',
     			backgroundColors:[
     				[value: "0", color: "#ffffff"],
             		[value: "115.6", 	color: "#bc2323"],
@@ -283,7 +283,7 @@ metadata {
         valueTile("ampsDisp", "device.ampsDisp") {
         	state (
         		"default", 
-        		label: '${currentValue}' , 
+        		label: '${currentValue} Amps' , 
         		foregroundColor: "#000000", 
     			color: "#000000", 
     			backgroundColors:[
@@ -300,7 +300,7 @@ metadata {
         valueTile("ampsOne", "device.ampsOne") {
         	state(
         		"default",
-        		label:'${currentValue}',
+        		label:'${currentValue} Amps',
         		foregroundColor: "#000000", 
     			color: "#000000", 
     			backgroundColors:[
@@ -317,7 +317,7 @@ metadata {
         valueTile("ampsTwo", "device.ampsTwo") {
         	state(
         		"default", 
-        		label:'${currentValue}',
+        		label:'${currentValue} Amps',
         		foregroundColor: "#000000", 
     			color: "#000000", 
     			backgroundColors:[
