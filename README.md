@@ -9,7 +9,7 @@ Plus version adds a secondary display that shows kWh, Watts, Amps and Volts per 
 
 WARNING
 =======
-<b>THIS DEVICE DOES NOT DISPLAY CORRECTLY/WORK ON ANDROID DEVICES!</b>
+While it works as intended on the iOS SmartThings app, <b>THIS SMARTTHINGS DEVICE DOES NOT DISPLAY CORRECTLY OR EVEN WORK ON ANDROID!</b>
 
 This is because SmartThings developers seemingly refuse to change the Android app to implement the same (accidental?) UI tile features of the iOS app. I've been told they won't fix it, because the iOS implementation is "incorrect."
 
