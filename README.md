@@ -9,7 +9,18 @@ Plus version adds a secondary display that shows kWh, Watts, Amps and Volts per 
 
 WARNING
 =======
-During development/test of this, I found that other "Things" stopped working, including ALL of my MiMolite switches. Powering off the ST hub for a minute seemed to fix the problem, but I have no idea why this device would impact another. Until this gets tracked down, USE AT YOUR OWN RISK!
+<b>THIS DEVICE DOES NOT DISPLAY CORRECTLY/WORK ON ANDROID DEVICES!</b>
+
+This is because SmartThings developers seemingly refuse to change the Android app to implement the same (accidental?) UI tile features of the iOS app. I've been told they won't fix it, because the iOS implementation is "incorrect."
+
+I have devoutly refused to change my code to match ST's inconsistent implementations because to do so is to break the cool UI feature that allows for a very efficient way to show two different displays on a single Tile. I'm sorry if you disagree, and feel free to make your own device if you don't like mine - the code is Open Source.
+
+The only work arounds are to remove the color statements in the tiles, or to edit out the text that is sent with the sendEvents for the XXXOne/XXXTwo devices. There are several who have done this already - search the SmartThings community for sources.
+
+It is entirely possible that ST will ultimately "fix" the iOS implementation so that this device no longer works on iOS, but I hope not.
+
+If you'd like to support my position, please keep sending emails to support asking ST to adopt the iOS Tile implementation that parses out the first number of a value string as the numeric "value" for a display widget, even if that string contains non-numeric text - this is what allows HEMv2+ to show "1123\nWatts" and "1123\n09:45AM" in the same widget, depending upon the display toggle mode.
+
 
 Usage
 -----
