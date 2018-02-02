@@ -125,29 +125,29 @@ metadata {
 		valueTile("powerDisp", "device.powerDisp") {
 			state (
 				"default", 
-				label:'${currentValue}', 
+				label:'${currentValue} Watts', 
             	foregroundColors:[
             		[value: 1, color: "#000000"],
             		[value: 10000, color: "#ffffff"]
             	], 
             	foregroundColor: "#000000",
                 backgroundColors:[
-					[value: "0 Watts", 		color: "#153591"],
-					[value: "3000 Watts", 	color: "#1e9cbb"],
-					[value: "6000 Watts", 	color: "#90d2a7"],
-					[value: "9000 Watts", 	color: "#44b621"],
-					[value: "12000 Watts", 	color: "#f1d801"],
-					[value: "15000 Watts", 	color: "#d04e00"], 
-					[value: "18000 Watts", 	color: "#bc2323"]
+					[value: "0", 		color: "#153591"],
+					[value: "3000", 	color: "#1e9cbb"],
+					[value: "6000", 	color: "#90d2a7"],
+					[value: "9000", 	color: "#44b621"],
+					[value: "12000", 	color: "#f1d801"],
+					[value: "15000", 	color: "#d04e00"], 
+					[value: "18000", 	color: "#bc2323"]
 					
 				/* For low-wattage homes, use these values
-					[value: "0 Watts", color: "#153591"],
-					[value: "500 Watts", color: "#1e9cbb"],
-					[value: "1000 Watts", color: "#90d2a7"],
-					[value: "1500 Watts", color: "#44b621"],
-					[value: "2000 Watts", color: "#f1d801"],
-					[value: "2500 Watts", color: "#d04e00"],
-					[value: "3000 Watts", color: "#bc2323"]
+					[value: "0", color: "#153591"],
+					[value: "500", color: "#1e9cbb"],
+					[value: "1000", color: "#90d2a7"],
+					[value: "1500", color: "#44b621"],
+					[value: "2000", color: "#f1d801"],
+					[value: "2500", color: "#d04e00"],
+					[value: "3000", color: "#bc2323"]
 				*/
 				]
 			)
@@ -155,29 +155,29 @@ metadata {
         valueTile("powerOne", "device.powerOne") {
         	state(
         		"default", 
-        		label:'${currentValue}', 
+        		label:'${currentValue} Watts', 
             	foregroundColors:[
             		[value: 1, color: "#000000"],
             		[value: 10000, color: "#ffffff"]
             	], 
             	foregroundColor: "#000000",
                 backgroundColors:[
-					[value: "0 Watts", 		color: "#153591"],
-					[value: "3000 Watts", 	color: "#1e9cbb"],
-					[value: "6000 Watts", 	color: "#90d2a7"],
-					[value: "9000 Watts", 	color: "#44b621"],
-					[value: "12000 Watts", 	color: "#f1d801"],
-					[value: "15000 Watts", 	color: "#d04e00"], 
-					[value: "18000 Watts", 	color: "#bc2323"]
+					[value: "0", 		color: "#153591"],
+					[value: "3000", 	color: "#1e9cbb"],
+					[value: "6000", 	color: "#90d2a7"],
+					[value: "9000", 	color: "#44b621"],
+					[value: "12000", 	color: "#f1d801"],
+					[value: "15000", 	color: "#d04e00"], 
+					[value: "18000", 	color: "#bc2323"]
 					
 				/* For low-wattage homes, use these values
-					[value: "0 Watts", color: "#153591"],
-					[value: "500 Watts", color: "#1e9cbb"],
-					[value: "1000 Watts", color: "#90d2a7"],
-					[value: "1500 Watts", color: "#44b621"],
-					[value: "2000 Watts", color: "#f1d801"],
-					[value: "2500 Watts", color: "#d04e00"],
-					[value: "3000 Watts", color: "#bc2323"]
+					[value: "0", color: "#153591"],
+					[value: "500", color: "#1e9cbb"],
+					[value: "1000", color: "#90d2a7"],
+					[value: "1500", color: "#44b621"],
+					[value: "2000", color: "#f1d801"],
+					[value: "2500", color: "#d04e00"],
+					[value: "3000", color: "#bc2323"]
 				*/
 				]
 			)
@@ -185,29 +185,29 @@ metadata {
         valueTile("powerTwo", "device.powerTwo") {
         	state(
         		"default", 
-        		label:'${currentValue}', 
+        		label:'${currentValue} Watts', 
             	foregroundColors:[
             		[value: 1, color: "#000000"],
             		[value: 10000, color: "#ffffff"]
             	], 
             	foregroundColor: "#000000",
                 backgroundColors:[
-					[value: "0 Watts", 		color: "#153591"],
-					[value: "3000 Watts", 	color: "#1e9cbb"],
-					[value: "6000 Watts", 	color: "#90d2a7"],
-					[value: "9000 Watts", 	color: "#44b621"],
-					[value: "12000 Watts", 	color: "#f1d801"],
-					[value: "15000 Watts", 	color: "#d04e00"], 
-					[value: "18000 Watts", 	color: "#bc2323"]
+					[value: "0", 		color: "#153591"],
+					[value: "3000", 	color: "#1e9cbb"],
+					[value: "6000", 	color: "#90d2a7"],
+					[value: "9000", 	color: "#44b621"],
+					[value: "12000", 	color: "#f1d801"],
+					[value: "15000", 	color: "#d04e00"], 
+					[value: "18000", 	color: "#bc2323"]
 					
 				/* For low-wattage homes, use these values
-					[value: "0 Watts", color: "#153591"],
-					[value: "500 Watts", color: "#1e9cbb"],
-					[value: "1000 Watts", color: "#90d2a7"],
-					[value: "1500 Watts", color: "#44b621"],
-					[value: "2000 Watts", color: "#f1d801"],
-					[value: "2500 Watts", color: "#d04e00"],
-					[value: "3000 Watts", color: "#bc2323"]
+					[value: "0", color: "#153591"],
+					[value: "500", color: "#1e9cbb"],
+					[value: "1000", color: "#90d2a7"],
+					[value: "1500", color: "#44b621"],
+					[value: "2000", color: "#f1d801"],
+					[value: "2500", color: "#d04e00"],
+					[value: "3000", color: "#bc2323"]
 				*/
 				]
 			)
@@ -240,41 +240,41 @@ metadata {
         valueTile("voltsDisp", "device.voltsDisp") {
         	state(
         		"default", 
-        		label: '${currentValue}', 
+        		label: '${currentValue} Volts', 
         		backgroundColors:[
-            		[value: "115.6 Volts", 	color: "#bc2323"],
-                	[value: "117.8 Volts", 	color: "#D04E00"],
-                	[value: "120.0 Volts", 	color: "#44B621"],
-                	[value: "122.2 Volts", 	color: "#D04E00"],
-                	[value: "124.4 Volts", 	color: "#bc2323"]
+            		[value: "115.6", 	color: "#bc2323"],
+                	[value: "117.8", 	color: "#D04E00"],
+                	[value: "120.0", 	color: "#44B621"],
+                	[value: "122.2", 	color: "#D04E00"],
+                	[value: "124.4", 	color: "#bc2323"]
             	]
             )
         }
         valueTile("voltsOne", "device.voltsOne") {
         	state(
         		"default", 
-        		label:'${currentValue}',
+        		label:'${currentValue} Volts',
        			backgroundColors:[
-       				[value: "L1", color: "#ffffff"],
-            		[value: "115.6 Volts", 	color: "#bc2323"],
-                	[value: "117.8 Volts", 	color: "#D04E00"],
-                	[value: "120.0 Volts", 	color: "#44B621"],
-                	[value: "122.2 Volts", 	color: "#D04E00"],
-                	[value: "124.4 Volts", 	color: "#bc2323"]
+       				[value: "0", color: "#ffffff"],
+            		[value: "115.6", 	color: "#bc2323"],
+                	[value: "117.8", 	color: "#D04E00"],
+                	[value: "120.0", 	color: "#44B621"],
+                	[value: "122.2", 	color: "#D04E00"],
+                	[value: "124.4", 	color: "#bc2323"]
             	]
             )
         }
         valueTile("voltsTwo", "device.voltsTwo") {
         	state(
         		"default", 
-        		label:'${currentValue}',
+        		label:'${currentValue} Volts',
     			backgroundColors:[
-    				[value: "L2", color: "#ffffff"],
-            		[value: "115.6 Volts", 	color: "#bc2323"],
-                	[value: "117.8 Volts", 	color: "#D04E00"],
-                	[value: "120.0 Volts", 	color: "#44B621"],
-                	[value: "122.2 Volts", 	color: "#D04E00"],
-                	[value: "124.4 Volts", 	color: "#bc2323"]
+    				[value: "0", color: "#ffffff"],
+            		[value: "115.6", 	color: "#bc2323"],
+                	[value: "117.8", 	color: "#D04E00"],
+                	[value: "120.0", 	color: "#44B621"],
+                	[value: "122.2", 	color: "#D04E00"],
+                	[value: "124.4", 	color: "#bc2323"]
             	]
             )
         }
@@ -283,51 +283,51 @@ metadata {
         valueTile("ampsDisp", "device.ampsDisp") {
         	state (
         		"default", 
-        		label: '${currentValue}' , 
+        		label: '${currentValue} Amps' , 
         		foregroundColor: "#000000", 
     			color: "#000000", 
     			backgroundColors:[
-					[value: "0 Amps", 	color: "#153591"],
-					[value: "25 Amps", 	color: "#1e9cbb"],
-					[value: "50 Amps", 	color: "#90d2a7"],
-					[value: "75 Amps", 	color: "#44b621"],
-					[value: "100 Amps", color: "#f1d801"],
-					[value: "125 Amps", color: "#d04e00"], 
-					[value: "150 Amps", color: "#bc2323"]
+					[value: "0", 	color: "#153591"],
+					[value: "25", 	color: "#1e9cbb"],
+					[value: "50", 	color: "#90d2a7"],
+					[value: "75", 	color: "#44b621"],
+					[value: "100", color: "#f1d801"],
+					[value: "125", color: "#d04e00"], 
+					[value: "150", color: "#bc2323"]
 				]
 			)
         }
         valueTile("ampsOne", "device.ampsOne") {
         	state(
         		"default",
-        		label:'${currentValue}',
+        		label:'${currentValue} Amps',
         		foregroundColor: "#000000", 
     			color: "#000000", 
     			backgroundColors:[
-					[value: "0 Amps", 	color: "#153591"],
-					[value: "25 Amps", 	color: "#1e9cbb"],
-					[value: "50 Amps", 	color: "#90d2a7"],
-					[value: "75 Amps", 	color: "#44b621"],
-					[value: "100 Amps", color: "#f1d801"],
-					[value: "125 Amps", color: "#d04e00"], 
-					[value: "150 Amps", color: "#bc2323"]
+					[value: "0", 	color: "#153591"],
+					[value: "25", 	color: "#1e9cbb"],
+					[value: "50", 	color: "#90d2a7"],
+					[value: "75", 	color: "#44b621"],
+					[value: "100", color: "#f1d801"],
+					[value: "125", color: "#d04e00"], 
+					[value: "150", color: "#bc2323"]
 				]
 			)
         }
         valueTile("ampsTwo", "device.ampsTwo") {
         	state(
         		"default", 
-        		label:'${currentValue}',
+        		label:'${currentValue} Amps',
         		foregroundColor: "#000000", 
     			color: "#000000", 
     			backgroundColors:[
-					[value: "0 Amps", 	color: "#153591"],
-					[value: "25 Amps", 	color: "#1e9cbb"],
-					[value: "50 Amps", 	color: "#90d2a7"],
-					[value: "75 Amps", 	color: "#44b621"],
-					[value: "100 Amps", color: "#f1d801"],
-					[value: "125 Amps", color: "#d04e00"], 
-					[value: "150 Amps", color: "#bc2323"]
+					[value: "0", 	color: "#153591"],
+					[value: "25", 	color: "#1e9cbb"],
+					[value: "50", 	color: "#90d2a7"],
+					[value: "75", 	color: "#44b621"],
+					[value: "100", color: "#f1d801"],
+					[value: "125", color: "#d04e00"], 
+					[value: "150", color: "#bc2323"]
 				]
 			)        		
         }
